@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Money, friends and falling out · C1 vocabulary</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--stem:#C2DC80;--glaze:#EA9CAF;--orchid:#D56989;--lilac:#F3EEF1;--ink:#3a1d2a;--deep:#a73a62;--leaf:#4a6414;--m:#7d6672;--c:#EAD3DB}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.45 Figtree,system-ui,sans-serif;color:var(--ink);background:var(--lilac);min-height:100vh}
+body::before,body::after{content:"";position:fixed;z-index:-1;pointer-events:none}
+body::before{width:420px;height:420px;right:-170px;bottom:-120px;border-radius:60% 40% 55% 45%;background:var(--glaze);opacity:.35;transform:rotate(-20deg)}
+body::after{width:340px;height:340px;left:-150px;top:-110px;border-radius:50% 50% 60% 40%;background:var(--stem);opacity:.45;transform:rotate(25deg)}
+#app{max-width:560px;margin:0 auto;padding:0 16px}
+header{display:flex;align-items:center;gap:12px;padding:20px 0 12px;font-weight:700;font-size:14px}
+.brand{color:var(--orchid);font-weight:800;font-size:22px}
+#stg{min-width:96px;color:var(--m);font-size:11px;text-transform:uppercase;letter-spacing:1px}
+.bar{flex:1;height:8px;border-radius:8px;background:var(--c);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--stem),var(--orchid));border-radius:8px;transition:width .3s}
+#xp{background:var(--stem);color:var(--leaf);padding:4px 12px;border-radius:20px;font-weight:800;font-size:13px}
+main{padding:12px 0 200px}
+.q{background:#fff;border:1px solid var(--c);border-left:6px solid var(--orchid);border-radius:28px 28px 28px 8px;padding:22px;font-size:18px;margin-bottom:14px;box-shadow:0 8px 24px #d569891f}
+.q small{display:block;color:var(--deep);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.q b{color:var(--deep)}
+u{text-decoration-color:var(--orchid);text-underline-offset:4px;text-decoration-thickness:2px}
+.big{display:block;font-size:56px;font-weight:800;color:var(--orchid)}
+.h{color:var(--m);font-size:14px;margin:0 0 14px}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--c);border-radius:18px;padding:14px 18px;margin:0 0 10px;font:inherit;color:var(--ink);cursor:pointer;transition:all .15s}
+.opt:hover{border-color:var(--glaze)}
+.opt.sel{border-color:var(--orchid);background:#EA9CAF40}
+.opt.ok{border-color:#9bbd45;background:var(--stem);color:var(--leaf);font-weight:600}
+.opt.bad{border-color:var(--orchid);background:#EA9CAF66;color:var(--deep)}
+input,textarea{width:100%;font:inherit;padding:12px 16px;border:2px solid var(--c);border-radius:18px;background:#fff;color:var(--ink);margin:0 0 14px}
+input:focus,textarea:focus{outline:0;border-color:var(--glaze)}
+.go{display:block;width:100%;border:0;border-radius:24px;padding:15px;font:800 16px Figtree,sans-serif;color:#fff;cursor:pointer;background:var(--deep);text-transform:uppercase;letter-spacing:1px}
+.go:disabled{opacity:.35;cursor:default}
+.alt{background:#fff;color:var(--deep);border:2px solid var(--glaze);margin-top:8px}
+.round{width:110px;height:110px;border-radius:60% 40% 55% 45%;border:0;font:800 18px Figtree,sans-serif;color:#fff;background:var(--deep);cursor:pointer;box-shadow:0 8px 28px #D5698966}
+#ft{position:fixed;left:0;right:0;bottom:0;background:#fffffff2;border-top:2px solid var(--c);padding:16px max(16px,calc(50% - 264px)) calc(16px + env(safe-area-inset-bottom,0px))}
+#ft.good{background:#eef6d6f5;border-color:var(--stem)}
+#ft.wrong{background:#fde8eef5;border-color:var(--glaze)}
+#msg{margin:0 0 10px;min-height:22px;font-weight:600}
+#msg small{display:block;font-weight:400;color:var(--m);margin-top:4px}
+button:focus-visible{outline:3px solid var(--glaze);outline-offset:2px}
+</style></head><body>
+<div id="app">
+<header><span class="brand">✿</span><span id="stg">Intro</span><div class="bar"><i id="pb"></i></div><span id="xp">XP 0</span></header>
+<main id="mn"></main>
+</div>
+<div id="ft" hidden><p id="msg"></p><button class="go" id="gb"></button><button class="go alt" id="skb">Skip task</button></div>
+<script>
+// Line format. Choice tasks: question|CORRECT|distractor...|explanation  (correct answer always FIRST; options are shuffled on screen)
+// Typing tasks: sentence with ___|accepted answer/other accepted answer|explanation
+const G=[
+["Meaning","Trust your gut. No translating!","m",[
+"Your banking app shows $340 for one weekend away, and <b>your stomach drops</b>. What do you feel?|a sick jolt of dread|a rush of excitement|a pang of hunger|a wave of relief|A physical reaction to bad news, often money or a message you dread.",
+"Which means to <b>tally up the cost</b>?|add everything together to see the total|refuse to pay any of it|split it with friends|haggle for a discount|Tally up = count and add to get a total.",
+"Which describes a <b>friendship that sours</b>?|It slowly turns bitter and unpleasant.|It ends in one big argument.|It becomes more formal.|It is put on hold for a while.|Sours = gradually goes bad, like milk. No single event is needed.",
+"“I adore Dan, but his mom and his three dogs come too. He's a <b>package deal</b>.” What does this mean?|You can't have one part without the others.|Dan is a bargain.|Dan is very generous.|Dan is hard to find.|A package deal = things that come together whether you like it or not.",
+"Which complaint is <b>valid</b>, not <b>petty</b>?|He never repaid the $800 I lent him.|She chews slightly too loudly.|He liked my ex's photo in 2019.|She laughs at her own jokes.|Petty = too trivial to fight about. Valid = a real reason to be upset.",
+"Which is the <b>odd one out</b>?|stay in budget|overspend on activities|live above one's means|go broke|Three describe money going wrong. “Stay in budget” is the healthy habit.",
+"Which is the <b>odd one out</b>?|make amends|a falling out|bad-mouth someone|a violation of trust|Three damage a relationship. “Make amends” repairs it."]],
+["Particles","One small word makes or breaks the chunk. Choose wisely.","m",[
+"She promised to come, then <b>bailed ___ me</b> at the last minute.|on|at|from|against|Bail on someone / on plans = cancel or abandon them.",
+"I haven't spoken to Jo in months. I should <b>reach ___</b> to her.|out|up|over|in|Reach out (to someone) = make contact, usually first.",
+"I'm completely <b>fed ___ with</b> his excuses.|up|off|out|down|Fed up with = annoyed, out of patience.",
+"Honestly, I'd rather <b>opt ___ of</b> the group trip.|out|off|away|down|Opt out (of) = choose not to take part.",
+"After the betrayal she <b>cut him ___ of her life</b>.|out|off|away|down|Cut someone out of your life. Note the 'of'.",
+"A good friend will <b>show ___ for you</b> when things get hard.|up|out|in|off|Show up for someone = be there when they need you."]],
+["Russian trap","How would a native speaker actually say it?","m",[
+"«Я прикусила язык и ничего не сказала.»|I bit my tongue and said nothing.|I bit my language and said nothing.|I bit my mouth and said nothing.|I pinched my tongue and said nothing.|Bite one's tongue = stop yourself from saying something. A fixed chunk.",
+"«Давай останемся при своём мнении.»|Let's agree to disagree.|Let's agree on disagreement.|Let's stay on our opinions.|Let's agree for not agreeing.|Fixed chunk with a bare infinitive. Don't rebuild it from Russian.",
+"«Они живут не по средствам.»|They live above their means.|They live not by their means.|They live over their budget.|They live out of their means.|Live above / within one's means. (Also very common: live beyond one's means.)",
+"«Подруга кинула меня в последний момент.»|My friend bailed on me at the last minute.|My friend threw me at the last minute.|My friend dropped me out at the last minute.|My friend left on me at the last minute.|“Кинуть” has no literal match. Bail on someone is the natural chunk."]],
+["Natural or not?","The grammar is fine. Is the chunk used naturally? Careful, some are traps.","m",[
+"“I'm sorry I snapped at you. I want to <b>make amends</b>: dinner's on me.”|Natural|Something's off|Make amends = do something to repair the harm.",
+"“Her cruel joke <b>hurt me to the core</b>, so I was thrilled.”|Something's off|Natural|Hurt to the core = deeply painful. It can't go with “thrilled”.",
+"“Please <b>bad-mouth</b> our client in the formal complaint letter.”|Something's off|Natural|Bad-mouth is informal and rude. Wrong register for a letter.",
+"“I love my sister and she exhausts me. <b>Two things can be true at the same time.</b>”|Natural|Something's off|Used to accept two seemingly opposite feelings.",
+"“We live <b>within our means</b>, so we're always in debt.”|Something's off|Natural|Within one's means = spending less than you earn. The sentence contradicts itself."]],
+["Spot the error","Fix the underlined chunk.","m",[
+"He <u>whipped down</u> his credit card before checking the price.|whipped out|whipped up|whipped off|whipped in|Whip out = pull out quickly. (Whip up = make quickly, e.g. a meal.)",
+"Neither of us would budge, so we agreed <u>to disagreeing</u>.|to disagree|for disagree|on disagreeing|at disagree|Agree to disagree: fixed chunk, bare infinitive.",
+"Every vacation he <u>overspends in</u> activities, then panics about money.|overspends on|overspends at|overspends for|overspends with|Overspend on + noun.",
+"Their friendship soured after he <u>hurt her at the core</u>.|hurt her to the core|hurt her in the core|hurt her from the core|hurt her by the core|Hurt someone to the core."]],
+["Recall","Type the missing chunk. Only the first letters help you.","t",[
+"I saw the total and my ___ ___.|stomach dropped/stomach drops|One's stomach drops = sudden dread.",
+"One more excuse and that was it. It was the ___ ___.|final straw|The final straw = the last small thing that breaks your patience.",
+"The little purchases ___ ___ ___ $400 a month.|add up to|Add up to = reach a total.",
+"Keep spending like this and you'll ___ ___ by December.|go broke|Go broke = lose all your money.",
+"I wanted to yell at him, but I decided to ___ ___ ___.|bite my tongue|Bite one's tongue = stay silent on purpose.",
+"I'm exhausted after work. Running helps me ___ ___ ___.|blow off steam|Blow off steam = release stress or anger.",
+"I felt awful about what I'd said, so I tried to ___ ___.|make amends|Make amends = repair the damage you caused."]],
+["Precision","All four options are grammatical. Only one is natural. Choose wisely!","m",[
+"After three failed relationships she was ___, convinced she'd always be alone.|in despair|in advance|in stages|in good shape|In despair = completely without hope.",
+"I love our impromptu ___: no plans, just a text and a pizza.|hangouts|budgets|burdens|amends|Impromptu = unplanned.",
+"Everyone deserves some financial ___.|stability|resentment|clout|stressor|Financial stability = a safe, predictable money situation.",
+"The way he treats waiters ___ something fundamental about his character.|reveals|reaches|rewards|resolves|Reveal something about someone's character.",
+"She finally ___ her concerns about the cost in the group chat.|voiced|opted|whipped|tallied|Voice concerns = say them out loud.",
+"Replying to her messages has become a ___. It used to be fun.|chore|dealbreaker|package deal|clout|Become a chore = turn into a boring obligation.",
+"He lied about the loan. That's not petty, that's a ___ of trust.|violation|condition|package|despair|A violation of trust = a serious betrayal.",
+"I always plan, always pay, always call. This friendship is totally ___.|one-sided|impromptu|financial|petty|One-sided = only one person makes the effort.",
+"He's chasing internet ___: he'd say anything for followers.|clout|stability|amends|means|Clout = influence and status online.",
+"Covering her ___ every month has become a real financial burden.|expenses|despair|clout|tongue|Cover someone's expenses = pay their costs for them."]]
+];
+const T=[];
+G.forEach(([st,ins,k,L])=>L.forEach(l=>{const p=l.split("|");
+ T.push(k=="m"?{st,ins,k,q:p[0],o:p.slice(1,-1),e:p[p.length-1]}:{st,ins,k,q:p[0],a:p[1].split("/"),e:p[2]})}));
+// chunks recognised in the free-writing task
+const RX=/\b(stomach (drops?|dropped)|final straw|agreed? to disagree|bail(s|ed)? on|bit(e)? (my|his|her|their|your|our) tongue|fed up|made? amends|reach(ed)? out|one-sided|add(s|ed)? up|cover(ed|s)? .{0,20}expenses|go(es)? broke|went broke|(above|within) (my|his|her|their|our|your) means|falling out|dealbreaker|to the core|sour(s|ed)?|blow(s|ing)? off steam|bad-?mouth(ed|ing)?|cut .{0,12} out of|show(s|ed)? up for|voic(e|ed) .{0,12}concerns|tally(ing)? up|overspen[dt]|violation of trust|package deal|petty|catch(ing)? up|opt(ed)? out|financial burden|hurt .{0,8}(wallet|bank account)|internet clout|sabotag\w*|became a chore|become a chore|hangouts?|resentment|stay(ed)? in budget|financial stability|impromptu)\b/gi;
+
+const $=s=>document.querySelector(s),sh=a=>[...a].sort(()=>Math.random()-.5),E=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"),
+N=s=>s.toLowerCase().replace(/[^a-z' ]/g,"").replace(/\s+/g," ").trim();
+let i=0,xp=0,cb=0,ok=0,n=0,miss=[],t0=0;
+const mn=$("#mn"),ft=$("#ft"),gb=$("#gb"),skb=$("#skb"),msg=$("#msg");
+skb.onclick=()=>nxt();
+function foot(t,fn,dis,cls,m){ft.hidden=false;ft.className=cls||"";msg.innerHTML=m||"";gb.textContent=t;gb.disabled=!!dis;gb.onclick=fn}
+function upd(){$("#xp").textContent="XP "+xp+(cb>2?"  ×"+cb:"");$("#pb").style.width=(100*i/T.length)+"%"}
+function nxt(){i++;i<T.length?show():end()}
+function grade(s,r,a){
+ let m;if(!s.r){n++;if(r)ok++}
+ if(r){cb++;const g=10+Math.min(cb,5);xp+=g;m="Correct! +"+g+" XP"}
+ else{cb=0;miss.push(s.q.replace(/<[^>]+>/g,"").replace(/___( ___)*/,"[ … ]")+" → "+a);
+  if(!s.r&&s.k!="w")T.push({...s,r:1});m="Answer: <b>"+E(a)+"</b>"}
+ upd();foot("Continue",nxt,0,r?"good":"wrong",m+(s.e?"<small>"+s.e+"</small>":""));
+}
+function show(){
+ const s=T[i];$("#stg").textContent=s.r?"Retry":s.st;upd();ft.hidden=true;scrollTo(0,0);mn.onclick=null;
+ const hd=q=>`<div class="q"><small>${s.r?"Second chance":s.st}</small>${q}</div><p class="h">${s.ins}</p>`;
+ if(s.k=="m"){
+  let v;mn.innerHTML=hd(s.q)+sh(s.o).map(x=>`<button class="opt">${E(x)}</button>`).join("");
+  mn.onclick=e=>{const b=e.target.closest(".opt");if(!b||b.disabled)return;
+   mn.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");v=b;
+   foot("Check",()=>{mn.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(x.textContent==s.o[0])x.classList.add("ok")});
+    const r=v.textContent==s.o[0];if(!r)v.classList.add("bad");grade(s,r,s.o[0])})};
+  foot("Check",0,1);
+ }else if(s.k=="t"){
+  const pat=s.a[0].split(" ").map(x=>x[0]+"_".repeat(x.length-1)).join(" ");
+  mn.innerHTML=hd(s.q.replace(/___( ___)*/,"<b>"+pat+"</b>"))+`<input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type the chunk">`;
+  const inp=$("#ans");inp.focus();
+  const chk=()=>{const r=s.a.some(x=>N(x)==N(inp.value));inp.disabled=true;inp.style.borderColor=r?"#9bbd45":"#D56989";grade(s,r,s.a[0])};
+  inp.oninput=()=>foot("Check",chk,!inp.value.trim());
+  inp.onkeydown=e=>{if(e.key=="Enter"&&inp.value.trim()&&!inp.disabled)chk()};
+  foot("Check",0,1);
+ }else{
+  mn.innerHTML=hd(s.q)+`<textarea id="ans" rows="7" placeholder="Write here…"></textarea>`;
+  const inp=$("#ans"),chk=()=>{
+   const f=[...new Set((inp.value.match(RX)||[]).map(x=>x.toLowerCase()))],wc=inp.value.trim().split(/\s+/).filter(Boolean).length;
+   s.e="Chunks found: "+E(f.join(", ")||"none")+" · "+wc+" words";
+   if(f.length>=4&&wc>=25){inp.disabled=true;grade(s,true,"")}
+   else foot("Check",chk,0,"wrong","Not yet: "+f.length+"/4 chunks, "+wc+"/25 words.<small>"+s.e+". Add more chunks and try again.</small>")};
+  inp.oninput=()=>foot("Check",chk,!inp.value.trim());foot("Check",0,1);
+ }
+}
+function end(){
+ ft.hidden=true;i=T.length;upd();$("#stg").textContent="Completed";
+ const m=Math.max(1,Math.round((Date.now()-t0)/6e4)),acc=n?Math.round(100*ok/n):0,u=[...new Set(miss)].slice(0,14),
+ t=`Money, friends and falling out\nFirst-try accuracy: ${ok}/${n} (${acc}%)\nXP: ${xp}\nTime: ${m} min`;
+ mn.innerHTML=`<div class="q"><small>Completed</small><span class="big">${acc}%</span>${acc>=85?"Excellent. Your active recall is at C1 level.":acc>=65?"Solid. Review the list below, then replay.":"Good effort. Replay the session to lock in the chunks."}</div><p class="h">${xp} XP · ${ok}/${n} correct first time · ${m} min</p>`+
+ (u.length?`<p><b>Review these:</b></p><ul>${u.map(x=>`<li>${E(x)}</li>`).join("")}</ul>`:"")+
+ `<textarea id="rs" readonly rows="4">${E(t)}</textarea><button class="go" id="cp">Copy result</button><button class="go alt" id="rt">Replay</button>`;
+ $("#cp").onclick=()=>{$("#rs").select();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>document.execCommand("copy"));$("#cp").textContent="Copied"};
+ $("#rt").onclick=()=>location.reload();
+}
+mn.innerHTML=`<div class="q"><small>C1 Lexical Workout</small>Money, friends &amp; falling out</div><p class="h">About 30 minutes, 7 stages: meaning, particles, Russian traps, natural-or-not, error spotting, typed recall, and precision. Mistakes come back for a second chance.</p><div style="text-align:center;margin-top:28px"><button class="round" id="go">Play</button></div>`;
+$("#go").onclick=()=>{
+ const rest=[];let k=0;
+ // shuffle inside each stage, keep stage order
+ G.forEach(g=>{const n=g[3].length;rest.push(...sh(T.slice(k,k+n)));k+=n});
+ T.length=0;T.push(...rest);t0=Date.now();i=0;show();
+};
+</script></body></html>
